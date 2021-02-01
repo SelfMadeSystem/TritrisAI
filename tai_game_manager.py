@@ -125,6 +125,8 @@ def place_piece():
         main_grid.check_lines()
     ninja_count -= 1
     new_piece()
+    if not current_piece.is_viable(0, 0):
+        reset()
 
 
 def new_piece():
@@ -162,6 +164,16 @@ def set_speed():
         if lvl < 0:
             print("Couldn't get level speed!!!")
             return
+
+
+def reset():
+    global bag, level, ninja_count
+    main_grid.clear_lines()
+    bag = list(range(0, 7))
+    level = 0
+    set_speed()
+    ninja_count = 0
+    new_piece()
 
 
 # noinspection PyTypeChecker
