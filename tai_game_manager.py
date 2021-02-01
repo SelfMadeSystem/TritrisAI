@@ -54,6 +54,7 @@ def render_update():
     global move_again
     main_grid.render()
     current_piece.render()
+    next_piece.render_next()
     time = tai_utils.time_ms()
     if inp.key_down:
         global down_time
@@ -130,17 +131,18 @@ def place_piece():
 
 
 def new_piece():
-    global current_piece, bag, ninja_count
+    global current_piece, bag, ninja_count, next_num, next_piece
     if ninja_count > 0:
         current_piece = tai_piece.new_piece(0)
         return
     if len(bag) == 0:
         bag = list(range(0, 7))
     rand = random.randint(0, len(bag) - 1)
-    i = bag.pop(rand)
-    current_piece = tai_piece.new_piece(i)
-    if i == 0:
+    if next_num == 0 and next_piece is not None:
         ninja_count = 3
+    current_piece = next_piece
+    next_num = bag.pop(rand)
+    next_piece = tai_piece.new_piece(next_num)
 
 
 def move_piece(x: int, y: int, r: int):
@@ -208,6 +210,8 @@ fall_speed = 0
 bag = list(range(0, 7))
 # noinspection PyTypeChecker
 current_piece = None  # type: tai_piece.Piece
+next_piece = None  # type: tai_piece.Piece
+next_num = 0
 ninja_count = 0
 
 colors = ((255, 0, 0),
@@ -225,6 +229,7 @@ def start():
     m = 2 / max(main_grid.w, main_grid.h)
     tai_renderer.render_scale = (m, m)
     tai_renderer.render_offset = (-1, -1)
+    new_piece()
     new_piece()
     renderer_obj = tai_renderer.Renderer(500, 500, "Tritris", key_callback, render_update)
     renderer_obj.start_render_loop()

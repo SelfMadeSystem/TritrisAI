@@ -161,6 +161,17 @@ class Piece:
         tai_renderer.draw_rect(self.pos.copy().add(0.8, 0).to_tuple(), (0.1, 0.9))
         tai_renderer.draw_rect(self.pos.copy().add(0, 0.8).to_tuple(), (0.9, 0.1))
 
+    def render_next(self):
+        w = tai_game_manager.main_grid.w * 1.5
+        h = tai_game_manager.main_grid.h * 0.5
+        x = 0
+        while x < len(self.grid):
+            y = 0
+            while y < len(self.grid[x]):
+                self.grid[x][y].render(w - x, h + y)
+                y += 1
+            x += 1
+
     def __str__(self) -> str:
         return "{0}".format(self.grid)
 
